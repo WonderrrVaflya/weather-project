@@ -18,12 +18,7 @@ interface WeatherState {
 }
 
 const initialState: WeatherState = {
-  cities: [{
-    id: '1',
-    name: 'jorg',
-    temperature: '27',
-    localTime: '13',
-  }],
+  cities: [],
   selectedCity: null,
   status: 'idle',
   error: null
