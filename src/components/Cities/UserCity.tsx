@@ -1,20 +1,22 @@
 import axios from "axios";
-import { City, fetchCity, selectCities } from "../../store/slices/cardSlice";
-import { useAppDispatch, useAppSelector } from "../../store/store";
+import { City, fetchCity } from "../../store/slices/cardSlice";
+import { useAppDispatch } from "../../store/store";
 import CityCard from "./CityCard";
 import { useEffect, useState } from "react";
 
 
 const UserCity: React.FC = () => {
-    const cities = useAppSelector(selectCities)
     const dispatch = useAppDispatch()
-    const [userCity, setUserCity] = useState<City | null>(null  )
+    const [userCity, setUserCity] = useState<City | null>(null)
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
       } else {
-        console.log("Геолокация не поддерживается этим браузером.");
+        setError("Геолокация не поддерживается этим браузером.");
+        setLoading(false);
       }
     },[]) 
     
@@ -26,9 +28,11 @@ const UserCity: React.FC = () => {
       const userCityData = response.data;
       console.log(userCityData)
       const city = await dispatch(fetchCity(userCityData.name)).unwrap();
-        setUserCity(city)
+      setUserCity(city)
+      setLoading(false)
     } catch (error) {
-      console.error("Error fetching city data:", error);
+      setError("Error fetching city data.");
+      setLoading(false);
     }
   }
 
@@ -47,20 +51,20 @@ const UserCity: React.FC = () => {
         console.log("Произошла неизвестная ошибка.");
         break;
     }
-  
+    setLoading(false);
   }
 
   return (
     <div>
-        <h1>
-        {userCity ? (
+      {loading ? (
+        <p>Загрузка...</p>
+      ) : userCity ? (
         <CityCard key={userCity.id} city={userCity} />
       ) : (
-        <p>Загрузка...</p>
+        <p>{error}</p>  
       )}
-        </h1>
     </div>
-  )
+  );
 }
 
 export default UserCity;

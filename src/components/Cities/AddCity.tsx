@@ -12,12 +12,13 @@ const AddCity: React.FC = () => {
           await dispatch(fetchCity(cityName)).unwrap();
           setCityName('');
         } catch (error) {
-          console.error('Failed to add city:', error);
+          alert('Failed to add city');
         }
       }}
 
   return (
-    <div>
+    <div> 
+        <h1>Добавьте город</h1>
         <input type='text' value={cityName} onChange={(e) => setCityName(e.target.value)}/>
         <button onClick={handleAddCity}/>
     </div>

@@ -6,8 +6,8 @@ function App() {
 
   return (
     <>
-      <CityList/>
       <AddCity/>
+      <CityList/>      
     </>
   )
 }
