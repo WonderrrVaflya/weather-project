@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector } from '../../store/store';
-import { selectCities, selectStatus, selectError } from '../../store/slices/weatherSlice';
+import { selectCities, selectStatus, selectError } from '../../store/slices/cardSlice';
 import CityCard from './CityCard';
 import cl from './CityList.module.css'
 

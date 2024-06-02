@@ -1,6 +1,6 @@
 import axios from "axios";
 import cl from "./UserCity.module.css"
-import { City, clearError, fetchCity } from "../../store/slices/weatherSlice";
+import { City, clearError, fetchCity } from "../../store/slices/cardSlice";
 import { useAppDispatch } from "../../store/store";
 import { useEffect, useState } from "react";
 import UserCard from "./UserCard";

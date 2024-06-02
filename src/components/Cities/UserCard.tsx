@@ -1,5 +1,5 @@
 import React from 'react'
-import { City } from '../../store/slices/weatherSlice';
+import { City } from '../../store/slices/cardSlice';
 import cl from './CityCard.module.css'
 
 interface CityCardProps{
