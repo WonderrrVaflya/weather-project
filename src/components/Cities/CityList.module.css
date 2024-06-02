@@ -1,0 +1,32 @@
+.cityContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cityContainer h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .cityCard {
+    margin-bottom: 20px;  
+  }
+  
+  .noCities {
+    color: #6c757d;
+    font-style: italic;
+  }
+   

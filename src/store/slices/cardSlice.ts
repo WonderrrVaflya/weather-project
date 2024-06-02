@@ -27,8 +27,7 @@
   export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=9f00e8da1bfae015ad968986513086bf&units=metric`);
-      const cityData = response.data;
-      
+      const cityData = response.data;     
       const timeResponse = await fetch('http://worldtimeapi.org/api/timezone/Europe/London');
       if (!timeResponse.ok) {
         throw new Error(`HTTP error! status: ${timeResponse.status}`);
@@ -62,28 +61,34 @@
       deleteCity: (state, action: PayloadAction<string>) => {
           state.cities = state.cities.filter(city => city.id !== action.payload)
       },
-      setSelectedCity: (state, action: PayloadAction<City>) => {
-          state.selectedCity = action.payload
-      },
+      clearError: (state) => {
+        state.error = null
+        state.status = 'idle'
+    }
     },
     extraReducers: (builder) => {
       builder
         .addCase(fetchCity.pending, (state) => {
-          state.status = 'loading'
+          console.log('fetchCity.pending');
+          state.status = 'loading';
         })
         .addCase(fetchCity.fulfilled, (state, action: PayloadAction<City>) => {
-          state.status = 'succeeded'
-          state.cities.push(action.payload)
+          console.log('fetchCity.fulfilled', action.payload);
+          state.status = 'succeeded';
+          if (!state.cities.some(city => city.id === action.payload.id) && !state.cities.some(city => city.name === action.payload.name)) {
+            state.cities.push(action.payload)
+          }
         })
         .addCase(fetchCity.rejected, (state, action) => {
-          state.status = 'failed'
-          state.error = action.error.message || 'Error fetching city'
-        })
+          console.log('fetchCity.rejected', action.error.message);
+          state.status = 'failed';
+          state.error = action.error.message || 'Error fetching city';
+        });
     },
   })
 
-  export const selectCities = (state: RootState) => state.weather.cities
+  export const selectCities = (state: RootState):City[] => state.weather.cities
   export const selectStatus = (state: RootState) => state.weather.status
   export const selectError = (state: RootState) => state.weather.error
-  export const { addCity, deleteCity, setSelectedCity } = weatherSlice.actions
+  export const { clearError, addCity, deleteCity } = weatherSlice.actions
   export default weatherSlice.reducer
