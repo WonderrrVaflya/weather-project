@@ -1,14 +1,12 @@
 import React from 'react'
-import { useAppDispatch} from '../../store/store'
-import { City, deleteCity } from '../../store/slices/cardSlice';
+import { City } from '../../store/slices/weatherSlice';
 import cl from './CityCard.module.css'
 
 interface CityCardProps{
     city: City;
 }
 
-const CityCard: React.FC<CityCardProps> = ({city}) => {
-  const dispatch = useAppDispatch()
+const UserCard: React.FC<CityCardProps> = ({city}) => {
 
 return (    
     <div className={cl.container}>
@@ -17,8 +15,7 @@ return (
         <p className={cl.detailItem}>Температура: {city.temperature}</p>
         <p className={cl.detailItem}>Время: {city.localTime}</p>
       </div>
-      <button className={cl.buttonDel} onClick={() => dispatch(deleteCity(city.id))}>Удалить</button>
     </div>
     )}
 
-export default CityCard;
+export default UserCard;

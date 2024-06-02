@@ -1,28 +1,5 @@
-  import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-  import type { PayloadAction } from '@reduxjs/toolkit'
-  import type { RootState } from '../store'
+  import { createAsyncThunk } from '@reduxjs/toolkit'
   import axios from 'axios'
-
-  interface WeatherState {
-    cities: City[],
-    selectedCity: City | null,
-    status: 'idle' | 'loading' | 'failed' | 'succeeded',
-    error: null | string
-  }
-
-  export interface City {
-      id: string,
-      name: string,
-      temperature: string,
-      localTime: string,
-  }
-
-  const initialState: WeatherState = {
-    cities: [],
-    selectedCity: null,
-    status: 'idle',
-    error: null
-  }
 
   export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: string, { rejectWithValue }) => {
     try {
@@ -50,45 +27,3 @@
       return rejectWithValue((err as Error).message);
     }
   });
-
-  export const weatherSlice = createSlice({
-    name: 'weather',
-    initialState,
-    reducers: {
-      addCity: (state, action: PayloadAction<City>) => {
-          state.cities.push(action.payload)
-      },
-      deleteCity: (state, action: PayloadAction<string>) => {
-          state.cities = state.cities.filter(city => city.id !== action.payload)
-      },
-      clearError: (state) => {
-        state.error = null
-        state.status = 'idle'
-    }
-    },
-    extraReducers: (builder) => {
-      builder
-        .addCase(fetchCity.pending, (state) => {
-          console.log('fetchCity.pending');
-          state.status = 'loading';
-        })
-        .addCase(fetchCity.fulfilled, (state, action: PayloadAction<City>) => {
-          console.log('fetchCity.fulfilled', action.payload);
-          state.status = 'succeeded';
-          if (!state.cities.some(city => city.id === action.payload.id) && !state.cities.some(city => city.name === action.payload.)) {
-            state.cities.push(action.payload)
-          }
-        })
-        .addCase(fetchCity.rejected, (state, action) => {
-          console.log('fetchCity.rejected', action.error.message);
-          state.status = 'failed';
-          state.error = action.error.message || 'Error fetching city';
-        });
-    },
-  })
-
-  export const selectCities = (state: RootState):City[] => state.weather.cities
-  export const selectStatus = (state: RootState) => state.weather.status
-  export const selectError = (state: RootState) => state.weather.error
-  export const { clearError, addCity, deleteCity } = weatherSlice.actions
-  export default weatherSlice.reducer

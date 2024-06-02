@@ -1,0 +1,32 @@
+.container {
+    width: 500px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .loading {
+    color: #007bff;
+  }
+  
+  .errorContainer {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .errorContainer p {
+    margin: 0;
+  }
+  

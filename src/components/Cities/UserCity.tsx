@@ -1,8 +1,9 @@
 import axios from "axios";
-import { City, fetchCity } from "../../store/slices/cardSlice";
+import cl from "./UserCity.module.css"
+import { City, clearError, fetchCity } from "../../store/slices/weatherSlice";
 import { useAppDispatch } from "../../store/store";
-import CityCard from "./CityCard";
 import { useEffect, useState } from "react";
+import UserCard from "./UserCard";
 
 
 const UserCity: React.FC = () => {
@@ -10,15 +11,16 @@ const UserCity: React.FC = () => {
     const [userCity, setUserCity] = useState<City | null>(null)
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [cityDataLoaded, setCityDataLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        if (navigator.geolocation) {
+        if (navigator.geolocation && !cityDataLoaded ) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
+        console.log(navigator.geolocation)
       } else {
-        setError("Геолокация не поддерживается этим браузером.");
         setLoading(false);
       }
-    },[]) 
+    },[dispatch]) 
     
   async function showPosition(position: { coords: { latitude: any; longitude: any; }; }) {
     try {
@@ -26,12 +28,14 @@ const UserCity: React.FC = () => {
       const lon = position.coords.longitude;
       const response = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=9f00e8da1bfae015ad968986513086bf&units=metric`);
       const userCityData = response.data;
-      console.log(userCityData)
-      const city = await dispatch(fetchCity(userCityData.name)).unwrap();
+      console.log(userCityData) 
+      const city = await dispatch(fetchCity(userCityData[0].name)).unwrap();
       setUserCity(city)
+      setCityDataLoaded(true)
       setLoading(false)
     } catch (error) {
       setError("Error fetching city data.");
+      dispatch(clearError())
       setLoading(false);
     }
   }
@@ -55,16 +59,17 @@ const UserCity: React.FC = () => {
   }
 
   return (
-    <div>
-      {loading ? (
-        <p>Загрузка...</p>
+    <div className={cl.container}>
+      <h1 className={cl.title}>Ваш город</h1>
+      {loading ? (    
+        <p className={cl.loading}>Загрузка...</p>
       ) : userCity ? (
-        <CityCard key={userCity.id} city={userCity} />
+        <UserCard key={userCity.id} city={userCity} />
       ) : (
-        <p>{error}</p>  
+        <div className={cl.errorContainer}><p>{error}</p></div>
       )}
     </div>
   );
 }
 
-export default UserCity;
+export default UserCity
