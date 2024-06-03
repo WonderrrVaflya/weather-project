@@ -32,7 +32,7 @@ export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: str
     const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=9f00e8da1bfae015ad968986513086bf&units=metric&lang=ru`);
     const cityData = response.data;
     console.log(cityData)
-    const timeResponse = await fetch('http://worldtimeapi.org/api/timezone/Europe/London');
+    const timeResponse = await fetch('https://worldtimeapi.org/api/timezone/Europe/London');
     if (!timeResponse.ok) {
       throw new Error(`HTTP error! status: ${timeResponse.status}`);
     }
@@ -50,7 +50,7 @@ export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: str
       localTime: result,
       main: cityData.weather[0].main,
       description: cityData.weather[0].description,
-      icon: `http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`,
+      icon: `https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`,
     };
     console.log(newCity)
     return newCity;

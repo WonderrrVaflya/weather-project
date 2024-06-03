@@ -26,7 +26,7 @@ const UserCity: React.FC = () => {
     try {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      const response = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=9f00e8da1bfae015ad968986513086bf&lang=ru&units=metric`);
+      const response = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=9f00e8da1bfae015ad968986513086bf&lang=ru&units=metric`);
       const userCityData = response.data;
       console.log(userCityData) 
       const city = await dispatch(fetchCity(userCityData[0].name)).unwrap();
