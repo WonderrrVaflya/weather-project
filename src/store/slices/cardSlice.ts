@@ -15,6 +15,9 @@ export interface City {
   name: string,
   temperature: string,
   localTime: string,
+  main: string,
+  description: string,
+  icon: string,
 }
 
 const initialState: WeatherState = {
@@ -24,10 +27,11 @@ const initialState: WeatherState = {
   error: null
 }
 
-export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: string, { rejectWithValue }) => {
+export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: string) => {
   try {
-    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=9f00e8da1bfae015ad968986513086bf&units=metric`);
+    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=9f00e8da1bfae015ad968986513086bf&units=metric&lang=ru`);
     const cityData = response.data;
+    console.log(cityData)
     const timeResponse = await fetch('http://worldtimeapi.org/api/timezone/Europe/London');
     if (!timeResponse.ok) {
       throw new Error(`HTTP error! status: ${timeResponse.status}`);
@@ -43,11 +47,15 @@ export const fetchCity = createAsyncThunk('city/fetchCity', async (cityName: str
       id: cityData.id.toString(),
       name: cityData.name,
       temperature: Math.floor(Number(cityData.main.temp)).toString(),
-      localTime: result
+      localTime: result,
+      main: cityData.weather[0].main,
+      description: cityData.weather[0].description,
+      icon: `http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`,
     };
+    console.log(newCity)
     return newCity;
   } catch (err) {
-    return rejectWithValue((err as Error).message);
+    throw new Error(`HTTP error! status: ${(err as Error).message}`)
   }
 });
 
@@ -55,15 +63,8 @@ export const weatherSlice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
-    addCity: (state, action: PayloadAction<City>) => {
-      // Проверяем, есть ли уже город с таким id
-      if (!state.cities.some(city => city.id === action.payload.id)) {
-        // Если города с таким id нет, то добавляем его
-        state.cities.push(action.payload)
-      }
-    },
-    deleteCity: (state, action: PayloadAction<string>) => {
-      state.cities = state.cities.filter(city => city.id !== action.payload)
+    deleteCity: (state, action: PayloadAction<City>) => {
+      state.cities = state.cities.filter(city => city.id !== action.payload.id && city.name !== action.payload.name)
     },
     clearError: (state) => {
       state.error = null
@@ -79,7 +80,7 @@ export const weatherSlice = createSlice({
       .addCase(fetchCity.fulfilled, (state, action: PayloadAction<City>) => {
         console.log('fetchCity.fulfilled', action.payload);
         state.status = 'succeeded';
-        if (!state.cities.some(city => city.id === action.payload.id)) {
+        if (!state.cities.some(city => city.id === action.payload.id && city.name === action.payload.name)) {
           state.cities.push(action.payload)
       }})
       .addCase(fetchCity.rejected, (state, action) => {
@@ -93,5 +94,5 @@ export const weatherSlice = createSlice({
 export const selectCities = (state: RootState): City[] => state.weather.cities;
 export const selectStatus = (state: RootState) => state.weather.status;
 export const selectError = (state: RootState) => state.weather.error;
-export const { clearError, addCity, deleteCity } = weatherSlice.actions
+export const { clearError, deleteCity } = weatherSlice.actions
 export default weatherSlice.reducer

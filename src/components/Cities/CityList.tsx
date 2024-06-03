@@ -22,7 +22,7 @@ const CityList: React.FC = () => {
             ))}
           </>
         ) : (
-          status === 'failed' ? <p>{error}</p> : <p className={cl.noCities}>Вы еще не добавили ни одного города</p>
+          status === 'failed' && cities.length === 0 ? <p>{error}</p> : <p className={cl.noCities}>Вы еще не добавили ни одного города</p>
         )}
       </div>
     </div>

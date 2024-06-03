@@ -9,13 +9,17 @@ interface CityCardProps{
 const UserCard: React.FC<CityCardProps> = ({city}) => {
 
 return (    
-    <div className={cl.container}>
-      <h1 className={cl.header}>{city.name}</h1>
-      <div className={cl.details}>
-        <p className={cl.detailItem}>Температура: {city.temperature}</p>
-        <p className={cl.detailItem}>Время: {city.localTime}</p>
-      </div>
+  <div className={cl.cityCard}>
+    <div className={cl.cityInfo}>
+      <h2>{city.name}</h2>
+      <p>Температура: <b>{city.temperature}°C</b></p>
+      <p>Время: <b>{city.localTime}</b></p>
+      <p>Погода: <b>{city.description}</b></p>
     </div>
+    <div className={cl.cityIcon}>
+      <img src={city.icon} alt={city.description} />
+    </div>  
+  </div>
     )}
 
 export default UserCard;

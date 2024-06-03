@@ -26,7 +26,7 @@ const UserCity: React.FC = () => {
     try {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      const response = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=9f00e8da1bfae015ad968986513086bf&units=metric`);
+      const response = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=9f00e8da1bfae015ad968986513086bf&lang=ru&units=metric`);
       const userCityData = response.data;
       console.log(userCityData) 
       const city = await dispatch(fetchCity(userCityData[0].name)).unwrap();
@@ -64,7 +64,7 @@ const UserCity: React.FC = () => {
       {loading ? (    
         <p className={cl.loading}>Загрузка...</p>
       ) : userCity ? (
-        <UserCard key={userCity.id} city={userCity} />
+        <div className={cl.cityCard}><UserCard key={userCity.id} city={userCity} /></div>
       ) : (
         <div className={cl.errorContainer}><p>{error}</p></div>
       )}
